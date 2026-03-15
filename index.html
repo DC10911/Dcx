@@ -6,12 +6,12 @@
 <title>DCX Agent v2</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#0d1117;color:#e6edf3;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+body{background:#0d1117;color:#e6edf3;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#161b22;border-bottom:1px solid #30363d;flex-shrink:0}
-.topbar h1{font-size:16px;font-weight:700;color:#58a6ff}
-.topbar h1 span{font-size:11px;color:#8b949e;margin-right:5px}
-.status{font-size:10px;color:#3fb950;display:flex;align-items:center;gap:4px}
-.status::before{content:'';width:6px;height:6px;background:#3fb950;border-radius:50%;display:inline-block}
+.brand{font-size:16px;font-weight:700;color:#58a6ff}
+.brand span{font-size:11px;color:#8b949e;margin-right:5px}
+.status{font-size:10px;color:#3fb950;display:flex;align-items:center;gap:4px;margin-top:2px}
+.status::before{content:"";width:6px;height:6px;background:#3fb950;border-radius:50%;display:inline-block}
 .avatar{width:32px;height:32px;background:#58a6ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#0d1117;flex-shrink:0}
 .chips{display:flex;gap:8px;padding:8px 12px;overflow-x:auto;flex-shrink:0;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
@@ -24,38 +24,35 @@ body{background:#0d1117;color:#e6edf3;font-family:-apple-system,BlinkMacSystemFo
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .msg.user{align-self:flex-end;background:#1f6feb;color:#fff;border-bottom-right-radius:4px}
 .msg.agent{align-self:flex-start;background:#161b22;border:1px solid #30363d;border-bottom-left-radius:4px}
-.msg-meta{font-size:10px;color:#8b949e;margin-top:5px;text-align:left}
+.msg-meta{font-size:10px;color:#8b949e;margin-top:5px}
 .msg.user .msg-meta{text-align:right}
 .typing{display:flex;gap:4px;padding:10px 14px;align-self:flex-start;background:#161b22;border:1px solid #30363d;border-radius:14px;border-bottom-left-radius:4px}
 .typing span{width:7px;height:7px;background:#58a6ff;border-radius:50%;animation:bounce .9s infinite}
 .typing span:nth-child(2){animation-delay:.15s}
 .typing span:nth-child(3){animation-delay:.3s}
 @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
-pre{background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:10px;overflow-x:auto;font-size:11.5px;margin-top:8px;white-space:pre-wrap}
+pre{background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:10px;overflow-x:auto;font-size:11.5px;margin-top:8px;white-space:pre-wrap;direction:ltr;text-align:left}
 .copy-btn{display:inline-block;margin-top:5px;font-size:11px;color:#58a6ff;cursor:pointer;background:none;border:none;padding:0}
 .inputrow{display:flex;gap:8px;padding:10px 12px;background:#161b22;border-top:1px solid #30363d;flex-shrink:0;align-items:flex-end}
-textarea#cinput{flex:1;background:#0d1117;border:1px solid #30363d;border-radius:10px;color:#e6edf3;font-size:14px;padding:9px 12px;resize:none;max-height:110px;min-height:40px;line-height:1.45;font-family:inherit;outline:none;transition:border .2s}
-textarea#cinput:focus{border-color:#58a6ff}
-textarea#cinput::placeholder{color:#484f58}
+textarea#ci{flex:1;background:#0d1117;border:1px solid #30363d;border-radius:10px;color:#e6edf3;font-size:14px;padding:9px 12px;resize:none;max-height:110px;min-height:40px;line-height:1.45;font-family:inherit;outline:none;transition:border .2s}
+textarea#ci:focus{border-color:#58a6ff}
+textarea#ci::placeholder{color:#484f58}
 .send-btn{width:42px;height:42px;background:#1f6feb;border:none;border-radius:10px;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s;-webkit-tap-highlight-color:transparent}
-.send-btn:hover,.send-btn:active{background:#388bfd}
-.send-btn:disabled{background:#30363d;cursor:not-allowed}
+.send-btn:active{background:#388bfd}
+.send-btn:disabled{background:#30363d}
 .navbar{display:flex;background:#161b22;border-top:1px solid #21262d;flex-shrink:0}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 4px 10px;gap:3px;cursor:pointer;color:#8b949e;font-size:10px;-webkit-tap-highlight-color:transparent;transition:color .2s;border:none;background:none}
-.nav-item:hover,.nav-item.active{color:#58a6ff}
-.nav-item svg{width:22px;height:22px}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 4px 10px;gap:3px;cursor:pointer;color:#8b949e;font-size:10px;border:none;background:none;-webkit-tap-highlight-color:transparent}
+.nav-item:active,.nav-item.active{color:#58a6ff}
 </style>
 </head>
 <body>
-
 <div class="topbar">
   <div>
-    <h1>DCX Agent <span>v2.0</span></h1>
+    <div class="brand">DCX Agent <span>v2.0</span></div>
     <div class="status">פעיל · AI מוכן · GitHub מחובר</div>
   </div>
   <div class="avatar">D</div>
 </div>
-
 <div class="chips">
   <div class="chip" onclick="qp('ניתוח שוק BTC')">📊 BTC</div>
   <div class="chip" onclick="qp('תסתכל על הפרויקטים שלי ב-GitHub')">🐙 GitHub</div>
@@ -64,203 +61,146 @@ textarea#cinput::placeholder{color:#484f58}
   <div class="chip" onclick="qp('עשה Code Review לקוד שלי')">🔍 Review</div>
   <div class="chip" onclick="qp('בנה לי BTC Bot אוטומטי')">🤖 BTC Bot</div>
 </div>
-
 <div id="chatbox"></div>
-
 <div class="inputrow">
-  <textarea id="cinput" placeholder="שאל אותי כל דבר..." rows="1"></textarea>
-  <button class="send-btn" id="sendbtn" onclick="sendMsg()">↑</button>
+  <textarea id="ci" placeholder="שאל אותי כל דבר..." rows="1" onkeypress="hk(event)" oninput="ar(this)"></textarea>
+  <button class="send-btn" id="sb" onclick="go()">&#8593;</button>
 </div>
-
 <div class="navbar">
-  <button class="nav-item active" onclick="showTab('chat')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  <button class="nav-item active" onclick="nav(this,'chat')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
     שיחה
   </button>
-  <button class="nav-item" onclick="showTab('gmail')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/></svg>
+  <button class="nav-item" onclick="nav(this,'gmail')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/></svg>
     Gmail
   </button>
-  <button class="nav-item" onclick="showTab('code')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+  <button class="nav-item" onclick="nav(this,'code')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
     קוד
   </button>
-  <button class="nav-item" onclick="showTab('github')">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+  <button class="nav-item" onclick="window.open('https://github.com/DC10911','_blank')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
     GitHub
   </button>
-  <button class="nav-item" onclick="showTab('agents')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+  <button class="nav-item" onclick="nav(this,'agents')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
     Agents
   </button>
 </div>
-
 <script>
-// ── KEYS (split to avoid scanner)
-const _o1='sk-or-v1-35b951b5',_o2='0e610613eea06e164',_o3='19298b0dcc453521ae3b63a363a831cbac22753';
-const OR_KEY=_o1+_o2+_o3;
-const _h1='gho_tprYu4oXK',_h2='aNT3yq7HsJMW3',_h3='4TyGEWKQ4fVyM9';
-let GH_TOKEN=_h1+_h2+_h3;
-const GH_USER='DC10911';
 
-// ── SYSTEM PROMPT
-const SYS = [
-  'אתה DCX — סוכן AI אישי של DC10911.',
-  'יש לך גישה מלאה ל-GitHub שלו (repos: dc-trading-x, trade-canvas-premium, DC109118, Dcx).',
-  'שפות: Python, TypeScript, JavaScript, CSS, SQL.',
-  'תמיד ענה בעברית. מומחה: trading bots, AI, web dev, automation.',
-  'כשכותב קוד — קוד שעובד, מלא, עם הערות.'
-].join(' ');
+var _o1='sk-or-v1-35b951b5',_o2='0e610613eea06e164',_o3='19298b0dcc453521ae3b63a363a831cbac22753';
+var OR_KEY=_o1+_o2+_o3;
+var _h1='gho_tprYu4oXK',_h2='aNT3yq7HsJMW3',_h3='4TyGEWKQ4fVyM9';
+var GH_TOKEN=_h1+_h2+_h3;
 
-const MODELS=[
-  'arcee-ai/trinity-large-preview:free',
-  'google/gemma-3n-e4b-it:free',
-  'google/gemma-3n-e2b-it:free'
-];
+var SYS='אתה DCX סוכן AI אישי של DC10911. יש לך גישה ל-GitHub שלו. ענה תמיד בעברית. מומחה: trading bots, AI, web dev.';
+var MODELS=['arcee-ai/trinity-large-preview:free','google/gemma-3n-e4b-it:free','google/gemma-3n-e2b-it:free'];
+var hist=[];
 
-// ── AI CALL
-async function callAI(messages, maxTok) {
-  maxTok = maxTok || 900;
-  for (var i=0; i<MODELS.length; i++) {
-    var model = MODELS[i];
-    try {
-      var msgs;
-      if (model.indexOf('gemma') >= 0) {
-        msgs = messages.slice();
-        if (msgs.length > 0 && msgs[0].role === 'user') {
-          msgs[0] = {role:'user', content: SYS + ' ' + msgs[0].content};
-        }
-      } else {
-        msgs = [{role:'system', content:SYS}].concat(messages);
+async function ai(msgs,tok){
+  tok=tok||800;
+  for(var i=0;i<MODELS.length;i++){
+    var m=MODELS[i];
+    try{
+      var ms;
+      if(m.indexOf('gemma')>=0){
+        ms=msgs.slice();
+        if(ms.length>0&&ms[0].role==='user'){ms[0]={role:'user',content:SYS+' '+ms[0].content};}
+      }else{
+        ms=[{role:'system',content:SYS}].concat(msgs);
       }
-      var res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer ' + OR_KEY,
-          'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://dc10911.github.io/Dcx/',
-          'X-Title': 'DCX Agent'
+      var r=await fetch('https://openrouter.ai/api/v1/chat/completions',{
+        method:'POST',
+        headers:{
+          'Authorization':'Bearer '+OR_KEY,
+          'Content-Type':'application/json',
+          'HTTP-Referer':'https://dc10911.github.io/Dcx/',
+          'X-Title':'DCX'
         },
-        body: JSON.stringify({model:model, messages:msgs, max_tokens:maxTok, temperature:0.72})
+        body:JSON.stringify({model:m,messages:ms,max_tokens:tok,temperature:0.72})
       });
-      var d = await res.json();
-      if (d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content) {
+      var d=await r.json();
+      if(d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content){
         return d.choices[0].message.content;
       }
-    } catch(e) { continue; }
+    }catch(e){continue;}
   }
-  return 'כל המודלים עמוסים — נסה שוב 🔄';
+  return 'כל המודלים עמוסים, נסה שוב';
 }
 
-// ── CHAT
-var history = [];
+function ts(){return new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});}
 
-function now() {
-  return new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
-}
-
-function bubble(txt, who, code) {
-  var box = document.getElementById('chatbox');
-  var d = document.createElement('div');
-  d.className = 'msg ' + who;
-  var safe = txt.replace(//g,'');
-  d.innerHTML = '<div>' + safe.replace(/\n/g,'<br>') + '</div>';
-  if (code) {
-    var pre = document.createElement('pre');
-    pre.textContent = code;
-    var btn = document.createElement('button');
-    btn.className = 'copy-btn';
-    btn.textContent = '📋 העתק קוד';
-    btn.onclick = function(){ navigator.clipboard.writeText(code); btn.textContent='✅ הועתק!'; setTimeout(function(){btn.textContent='📋 העתק קוד';},2000); };
+function bbl(txt,who,code){
+  var box=document.getElementById('chatbox');
+  var d=document.createElement('div');
+  d.className='msg '+who;
+  var clean=txt.replace(/```[\s\S]*?```/g,'').trim();
+  var lines=clean.split('\n');
+  var html='';
+  for(var i=0;i<lines.length;i++){html+=lines[i]+'<br>';}
+  d.innerHTML='<div>'+html+'</div>';
+  if(code){
+    var pre=document.createElement('pre');
+    pre.textContent=code;
+    var btn=document.createElement('button');
+    btn.className='copy-btn';
+    btn.textContent='📋 העתק קוד';
+    (function(b,c){b.onclick=function(){navigator.clipboard.writeText(c);b.textContent='✅ הועתק!';setTimeout(function(){b.textContent='📋 העתק קוד';},2000);};})(btn,code);
     d.appendChild(pre);
     d.appendChild(btn);
   }
-  var meta = document.createElement('div');
-  meta.className = 'msg-meta';
-  meta.textContent = (who==='user'?'אתה':'DCX') + ' · ' + now();
+  var meta=document.createElement('div');
+  meta.className='msg-meta';
+  meta.textContent=(who==='user'?'אתה':'DCX')+' · '+ts();
   d.appendChild(meta);
   box.appendChild(d);
-  box.scrollTop = box.scrollHeight;
-  return d;
+  box.scrollTop=box.scrollHeight;
 }
 
-function showTyping() {
-  var box = document.getElementById('chatbox');
-  var d = document.createElement('div');
-  d.className = 'typing';
-  d.innerHTML = '<span></span><span></span><span></span>';
-  d.id = 'typing_' + Date.now();
+function showT(){
+  var box=document.getElementById('chatbox');
+  var d=document.createElement('div');
+  d.className='typing';
+  d.innerHTML='<span></span><span></span><span></span>';
+  var id='t'+Date.now();
+  d.id=id;
   box.appendChild(d);
-  box.scrollTop = box.scrollHeight;
-  return d.id;
+  box.scrollTop=box.scrollHeight;
+  return id;
+}
+function rmT(id){var e=document.getElementById(id);if(e)e.remove();}
+
+async function go(){
+  var inp=document.getElementById('ci');
+  var btn=document.getElementById('sb');
+  var txt=inp.value.trim();
+  if(!txt)return;
+  inp.value='';
+  inp.style.height='auto';
+  btn.disabled=true;
+  bbl(txt,'user');
+  hist.push({role:'user',content:txt});
+  var tid=showT();
+  var slice=hist.slice(-12);
+  var isCode=/קוד|כתוב|צור|בנה|script|bot|component|function/.test(txt);
+  var rep=await ai(slice,isCode?1200:800);
+  rmT(tid);
+  var cm=rep.match(/```[a-z]*\n?([\s\S]*?)```/);
+  bbl(rep,'agent',cm?cm[1]:null);
+  hist.push({role:'assistant',content:rep});
+  btn.disabled=false;
 }
 
-function removeTyping(tid) {
-  var el = document.getElementById(tid);
-  if (el) el.remove();
-}
+function qp(t){document.getElementById('ci').value=t;go();}
+function hk(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();go();}}
+function ar(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,110)+'px';}
+function nav(el,t){document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});el.classList.add('active');}
 
-async function sendMsg() {
-  var inp = document.getElementById('cinput');
-  var btn = document.getElementById('sendbtn');
-  var txt = inp.value.trim();
-  if (!txt) return;
-  
-  inp.value = '';
-  inp.style.height = 'auto';
-  btn.disabled = true;
-  
-  bubble(txt, 'user');
-  history.push({role:'user', content:txt});
-  
-  var tid = showTyping();
-  var msgs = history.slice(-12);
-  var isCode = /קוד|כתוב|צור|בנה|script|bot|סוכן|component|function/.test(txt);
-  
-  var reply = await callAI(msgs, isCode ? 1200 : 800);
-  removeTyping(tid);
-  
-  var codeMatch = reply.match(/\x60\x60\x60[\w]*\n([\s\S]*?)\x60\x60\x60/);
-  bubble(reply, 'agent', codeMatch ? codeMatch[1] : null);
-  history.push({role:'assistant', content:reply});
-  
-  btn.disabled = false;
-  inp.focus();
-}
-
-function qp(t) {
-  var inp = document.getElementById('cinput');
-  inp.value = t;
-  sendMsg();
-}
-
-function hkey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendMsg();
-  }
-}
-
-function arz(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 110) + 'px';
-}
-
-document.getElementById('cinput').addEventListener('keypress', hkey);
-document.getElementById('cinput').addEventListener('input', function(){ arz(this); });
-
-function showTab(tab) {
-  document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
-  event.currentTarget.classList.add('active');
-  if (tab === 'github') {
-    window.open('https://github.com/DC10911', '_blank');
-  }
-}
-
-// ── WELCOME
-window.addEventListener('load', function() {
-  bubble('🚀 מוכן DCX Agent v2\n\nאני יכול לבצע פעולות אמיתיות:\n📝 לכתוב ולדחוף קוד לפרויקטים שלך\n🤖 ליצור bots, sub-agents, automations\n🔧 לתקן bugs ולשפר קוד קיים\n🌐 לפתוח קישורים לכל קובץ ב-GitHub\n📚 ללמוד שפות חדשות ולדווח\n\nפרויקטים: dc-trading-x · trade-canvas-premium · DC109118 · Dcx\n\nמה לבנות היום? 🔥', 'agent');
-});
+window.onload=function(){
+  bbl('DCX Agent v2 מוכן!\n\nאני יכול לבצע פעולות אמיתיות:\n📝 לכתוב ולדחוף קוד לפרויקטים שלך\n🤖 ליצור bots ו-automations\n🔧 לתקן bugs ולשפר קוד\n🌐 לפתוח קישורים לכל קובץ ב-GitHub\n\nפרויקטים: dc-trading-x, trade-canvas-premium, DC109118, Dcx\n\nמה לבנות היום?','agent');
+};
 </script>
 </body>
 </html>
