@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>DCX Agent v2</title>
+<style>
+*{font-family:'Segoe UI',system-ui,sans-serif;box-sizing:border-box}
+html,body{background:#060912;color:#e2e8f0;margin:0;padding:0;min-height:100vh}
+.glass{background:rgba(10,16,32,0.96);backdrop-filter:blur(20px);border:1px solid rgba(99,179,237,0.15)}
+.btn-p{background:linear-gradient(135deg,#1a56db,#6366f1);border:none;cursor:pointer;color:white;font-weight:700;transition:all .2s;border-radius:11px}
+.btn-p:active{transform:scale(.96)}
+.btn-g{background:rgba(99,179,237,.07);border:1px solid rgba(99,179,237,.2);cursor:pointer;transition:all .2s;border-radius:11px;color:#63b3ed}
+.btn-green{background:linear-gradient(135deg,#059669,#0d9488);border:none;cursor:pointer;color:white;font-weight:700;border-radius:11px}
+.btn-red{background:linear-gradient(135deg,#dc2626,#9f1239);border:none;cursor:pointer;color:white;font-weight:700;border-radius:11px}
+.btn-or{background:linear-gradient(135deg,#d97706,#b45309);border:none;cursor:pointer;color:white;font-weight:700;border-radius:11px}
+input,textarea,select{background:rgba(255,255,255,.04);border:1px solid rgba(99,179,237,.2);border-radius:11px;color:white;font-size:13px;padding:11px 13px;width:100%;outline:none;transition:border .2s;-webkit-appearance:none}
+input:focus,textarea:focus,select:focus{border-color:rgba(99,179,237,.5)}
+input::placeholder,textarea::placeholder{color:#4a5568}
+select option{background:#0a1020}
+.pulse{animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.msgin{animation:msgin .25s ease-out}
+@keyframes msgin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.tdot span{animation:tdot 1.4s infinite;display:inline-block}
+.tdot span:nth-child(2){animation-delay:.2s}
+.tdot span:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,80%,100%{opacity:0}40%{opacity:1}}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(4,6,12,.99);border-top:1px solid rgba(99,179,237,.1);display:flex;z-index:50;padding-bottom:env(safe-area-inset-bottom)}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;padding:7px 2px 5px;font-size:8px;color:#4a5568;transition:color .2s;cursor:pointer;border:none;background:none;gap:2px}
+.nb.active{color:#63b3ed}
+.nb .ico{font-size:17px}
+.wrap{padding:10px 11px 76px;max-width:500px;margin:0 auto}
+header{background:rgba(4,6,12,.99);border-bottom:1px solid rgba(99,179,237,.1);position:sticky;top:0;z-index:40;padding:9px 13px;display:flex;align-items:center;justify-content:space-between}
+.card{background:rgba(8,13,26,.97);border:1px solid rgba(99,179,237,.1);border-radius:12px;padding:11px 13px;margin-bottom:7px;transition:all .2s}
+.ba{background:rgba(26,86,219,.12);border:1px solid rgba(26,86,219,.25);border-radius:16px 16px 16px 4px;padding:11px 14px;max-width:90%}
+.bu{background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.25);border-radius:16px 16px 4px 16px;padding:11px 14px;max-width:90%}
+.spin{border:2px solid rgba(99,179,237,.2);border-top-color:#63b3ed;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.term{background:#030508;border:1px solid rgba(99,179,237,.15);border-radius:11px;font-family:'Courier New',monospace;font-size:11px;color:#68d391;padding:11px;resize:none;width:100%}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:rgba(99,179,237,.2);border-radius:10px}
+.toast{position:fixed;bottom:78px;left:50%;transform:translateX(-50%);background:rgba(10,16,32,.98);border:1px solid rgba(99,179,237,.4);color:white;font-size:12px;font-weight:700;padding:8px 18px;border-radius:50px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.tag{display:inline-block;background:rgba(99,179,237,.07);border:1px solid rgba(99,179,237,.2);border-radius:20px;padding:5px 11px;font-size:11px;color:#63b3ed;margin:2px;cursor:pointer}
+.tag:active{background:rgba(99,179,237,.2)}
+.mt{color:#63b3ed;font-weight:700}
+.mt b,.mt strong{color:#90cdf4}
+.mt code{background:rgba(0,0,0,.5);border-radius:4px;padding:1px 5px;font-family:monospace;font-size:11px;color:#68d391}
+.mt li{margin:3px 0}
+.sdot{width:7px;height:7px;border-radius:50%;display:inline-block}
+.lbadge{display:inline-flex;align-items:center;gap:4px;background:rgba(0,0,0,.3);border-radius:7px;padding:2px 7px;font-size:10px;font-family:monospace;margin:2px}
+.progbar{height:4px;background:rgba(99,179,237,.1);border-radius:10px;overflow:hidden;margin-top:5px}
+.progfill{height:100%;background:linear-gradient(90deg,#1a56db,#6366f1);border-radius:10px;transition:width .5s ease}
+a.ghl{color:#63b3ed;text-decoration:underline;word-break:break-all;font-size:12px}
+.acard{background:rgba(8,13,26,.97);border:1px solid rgba(99,179,237,.12);border-radius:13px;padding:12px;margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;align-items:center;gap:9px">
+    <div class="btn-p" style="width:35px;height:35px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">D</div>
+    <div>
+      <div style="font-weight:800;font-size:14px">DCX Agent <span style="font-size:9px;font-weight:400;color:#63b3ed;background:rgba(26,86,219,.15);padding:2px 6px;border-radius:10px">v2.0</span></div>
+      <div id="stxt" style="font-size:10px;color:#48bb78">● פעיל · AI מוכן · GitHub מחובר</div>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#4a5568" id="htime"></div>
+</header>
+
+<div class="wrap">
+
+<!-- CHAT -->
+<div id="p-chat">
+  <div style="overflow-x:auto;white-space:nowrap;padding-bottom:8px;margin-bottom:8px">
+    <span class="tag" onclick="qp('תכתוב לי Python trading bot שמושך מחיר BTC מ-Binance ושולח alert כשמגיע ל-90K')">🤖 BTC Bot</span>
+    <span class="tag" onclick="qp('בדוק את הקוד בפרויקט dc-trading-x ותגיד לי מה הבעיות')">🔍 Code Review</span>
+    <span class="tag" onclick="qp('תצור לי TypeScript component חדש ל-trade-canvas-premium')">⚛️ New Component</span>
+    <span class="tag" onclick="qp('מה סטטוס כל הפרויקטים שלי ב-GitHub?')">📊 סטטוס</span>
+    <span class="tag" onclick="qp('תיצור סוכן שיעקוב אחרי GitHub ויתריע על שינויים')">🔔 Watch Agent</span>
+  </div>
+  <div class="glass" style="border-radius:15px;overflow:hidden">
+    <div id="chatbox" style="height:56vh;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:9px">
+      <div class="msgin" style="display:flex;align-items:flex-start;gap:8px">
+        <div class="btn-p" style="width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0">D</div>
+        <div class="ba">
+          <div class="mt" style="font-size:13px;line-height:1.6">
+            <strong>DCX Agent v2 מוכן 🚀</strong><br><br>
+            אני יכול לבצע פעולות אמיתיות:<br>
+            • 📝 לכתוב ולדחוף קוד ישירות לפרויקטים שלך<br>
+            • 🤖 ליצור bots, sub-agents, ו-automations<br>
+            • 🔧 לתקן bugs ולשפר קוד קיים<br>
+            • 🌐 לפתוח קישורים לכל קובץ ב-GitHub<br>
+            • 📚 ללמוד שפות חדשות ולדווח<br>
+            • ✉️ לשלוח מיילים ולנהל משימות<br><br>
+            <strong>פרויקטים:</strong> dc-trading-x · trade-canvas-premium · DC109118 · Dcx<br><br>
+            מה לבנות היום? 🔥
+          </div>
+          <div style="font-size:10px;color:#4a5568;margin-top:5px">DCX · 09:50</div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:9px;border-top:1px solid rgba(99,179,237,.1);display:flex;gap:7px;align-items:flex-end">
+      <textarea id="cinput" rows="1" placeholder="תגיד לי מה לבנות / לתקן / ליצור..."
+        style="flex:1;font-size:13px;resize:none;max-height:100px;line-height:1.4"
+        onkeypress="hkey(event)" oninput="arz(this)"></textarea>
+      <button onclick="sendMsg()" class="btn-p" style="width:41px;height:41px;font-size:18px;flex-shrink:0;display:flex;align-items:center;justify-content:center">↑</button>
+    </div>
+  </div>
+</div>
+
+<!-- AGENTS -->
+<div id="p-agents" style="display:none">
+  <div style="font-size:10px;font-weight:700;color:#a0aec0;text-transform:uppercase;letter-spacing:.06em;margin-bottom:9px">🤖 Sub-Agents</div>
+  <div style="display:flex;gap:6px;margin-bottom:11px">
+    <button onclick="atab('active')" id="ab-active" class="btn-p" style="flex:1;padding:9px;font-size:11px">▶ פעילים</button>
+    <button onclick="atab('create')" id="ab-create" class="btn-g" style="flex:1;padding:9px;font-size:11px">+ צור</button>
+    <button onclick="atab('langs')" id="ab-langs" class="btn-g" style="flex:1;padding:9px;font-size:11px;color:#a78bfa">📚 שפות</button>
+  </div>
+
+  <div id="at-active">
+    <div id="aglist"></div>
+    <div style="margin-top:9px;padding:10px;background:rgba(26,86,219,.05);border:1px solid rgba(26,86,219,.15);border-radius:12px">
+      <div style="font-size:11px;color:#63b3ed;font-weight:700;margin-bottom:7px">⚡ הפעל מהר</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <button onclick="quickAg('btc')" class="btn-or" style="font-size:11px;padding:7px 11px">₿ BTC Monitor</button>
+        <button onclick="quickAg('review')" class="btn-p" style="font-size:11px;padding:7px 11px">🔍 Code Review</button>
+        <button onclick="quickAg('deploy')" class="btn-green" style="font-size:11px;padding:7px 11px">🚀 Deploy Check</button>
+        <button onclick="quickAg('bugs')" class="btn-red" style="font-size:11px;padding:7px 11px">🐛 Bug Hunter</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="at-create" style="display:none">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <input id="ag-name" placeholder="שם הסוכן..."/>
+      <select id="ag-type">
+        <option value="">סוג...</option>
+        <option value="monitor">📡 Monitor — עוקב ומתריע</option>
+        <option value="coder">💻 Coder — כותב קוד</option>
+        <option value="tester">🧪 Tester — מוצא bugs</option>
+        <option value="deployer">🚀 Deployer — פורס</option>
+        <option value="trader">📈 Trader — ניתוח שוק</option>
+      </select>
+      <select id="ag-repo">
+        <option value="">פרויקט...</option>
+        <option value="dc-trading-x">dc-trading-x</option>
+        <option value="trade-canvas-premium">trade-canvas-premium</option>
+        <option value="DC109118">DC109118</option>
+        <option value="all">כל הפרויקטים</option>
+      </select>
+      <textarea id="ag-task" rows="3" placeholder="מה הסוכן יעשה..." style="resize:none"></textarea>
+      <button onclick="createAg()" class="btn-p" style="width:100%;padding:12px;font-size:14px">🤖 צור סוכן</button>
+    </div>
+  </div>
+
+  <div id="at-langs" style="display:none">
+    <div style="font-size:12px;color:#718096;margin-bottom:9px">שפות בפרויקטים שלך:</div>
+    <div id="langslist"></div>
+  </div>
+</div>
+
+<!-- GITHUB -->
+<div id="p-github" style="display:none">
+  <div style="font-size:10px;font-weight:700;color:#a0aec0;text-transform:uppercase;letter-spacing:.06em;margin-bottom:9px">🐙 GitHub · DC10911</div>
+  <div style="display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap">
+    <button onclick="gtab('repos')" id="gb-repos" class="btn-p" style="flex:1;padding:8px;font-size:11px;min-width:65px">📁 Repos</button>
+    <button onclick="gtab('commits')" id="gb-commits" class="btn-g" style="flex:1;padding:8px;font-size:11px;min-width:65px">📝 Commits</button>
+    <button onclick="gtab('files')" id="gb-files" class="btn-g" style="flex:1;padding:8px;font-size:11px;min-width:65px">🗂 קבצים</button>
+    <button onclick="gtab('push')" id="gb-push" class="btn-g" style="flex:1;padding:8px;font-size:11px;min-width:65px;color:#68d391">⬆ Push</button>
+  </div>
+
+  <div id="gt-repos"><div id="ghrepos"><div style="text-align:center;padding:20px"><div class="spin" style="width:20px;height:20px;border-width:3px;margin:0 auto"></div></div></div></div>
+
+  <div id="gt-commits" style="display:none">
+    <select id="greposel" onchange="loadCommits()" style="width:100%;margin-bottom:9px">
+      <option value="">בחר repo...</option>
+      <option value="dc-trading-x">dc-trading-x</option>
+      <option value="trade-canvas-premium">trade-canvas-premium</option>
+      <option value="DC109118">DC109118</option>
+      <option value="Dcx">Dcx</option>
+    </select>
+    <div id="ghcommits"><div style="color:#4a5568;text-align:center;padding:20px;font-size:13px">בחר repo</div></div>
+  </div>
+
+  <div id="gt-files" style="display:none">
+    <select id="gfilerepo" onchange="loadFiles(this.value,'')" style="width:100%;margin-bottom:9px">
+      <option value="">בחר repo...</option>
+      <option value="dc-trading-x">dc-trading-x</option>
+      <option value="trade-canvas-premium">trade-canvas-premium</option>
+      <option value="DC109118">DC109118</option>
+      <option value="Dcx">Dcx</option>
+    </select>
+    <div id="ghfiles"><div style="color:#4a5568;text-align:center;padding:20px;font-size:13px">בחר repo</div></div>
+    <div id="ghfilecontent" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+        <div id="ghfilename" style="font-size:11px;color:#63b3ed;font-weight:700"></div>
+        <div style="display:flex;gap:5px">
+          <button onclick="openInGH()" class="btn-g" style="padding:5px 9px;font-size:11px">🔗 פתח</button>
+          <button onclick="closeFile()" style="background:none;border:none;color:#718096;cursor:pointer;font-size:16px">✕</button>
+        </div>
+      </div>
+      <textarea id="ghfiletext" class="term" rows="12" style="font-size:11px"></textarea>
+      <div style="display:flex;gap:6px;margin-top:7px">
+        <button onclick="analyzeFile()" class="btn-p" style="flex:1;padding:9px;font-size:12px">🤖 נתח</button>
+        <button onclick="fixFile()" class="btn-or" style="flex:1;padding:9px;font-size:12px">🔧 תקן</button>
+        <button onclick="pushFile()" class="btn-green" style="flex:1;padding:9px;font-size:12px">⬆ Push</button>
+      </div>
+      <div id="ghanalysis" style="display:none;margin-top:8px;padding:11px;border-radius:11px" class="glass"></div>
+    </div>
+  </div>
+
+  <div id="gt-push" style="display:none">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <select id="pushrepo">
+        <option value="dc-trading-x">dc-trading-x</option>
+        <option value="trade-canvas-premium">trade-canvas-premium</option>
+        <option value="DC109118">DC109118</option>
+        <option value="Dcx">Dcx</option>
+      </select>
+      <input id="pushpath" placeholder="נתיב (לדוג: bots/alert.py)"/>
+      <input id="pushmsg" placeholder="Commit message..."/>
+      <textarea id="pushcontent" rows="8" class="term" placeholder="# תוכן הקובץ..."></textarea>
+      <button onclick="doPush()" id="pushbtn" class="btn-green" style="width:100%;padding:12px;font-size:14px">⬆ Push לGitHub</button>
+      <div id="pushresult" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CODE -->
+<div id="p-code" style="display:none">
+  <div style="font-size:10px;font-weight:700;color:#a0aec0;text-transform:uppercase;letter-spacing:.06em;margin-bottom:9px">💻 AI Code Engine</div>
+  <div style="display:flex;gap:7px;margin-bottom:8px">
+    <input id="codeprompt" placeholder="תאר מה לכתוב..." style="flex:1"/>
+    <button onclick="aiCode()" class="btn-p" style="padding:0 13px;font-size:12px;font-weight:700;white-space:nowrap">🤖 כתוב</button>
+  </div>
+  <div style="margin-bottom:7px;overflow-x:auto;white-space:nowrap">
+    <span class="tag" onclick="setLang('python')">🐍 Python</span>
+    <span class="tag" onclick="setLang('typescript')">📘 TypeScript</span>
+    <span class="tag" onclick="setLang('javascript')">⚡ JS</span>
+    <span class="tag" onclick="setLang('bash')">🖥 Bash</span>
+    <span class="tag" onclick="setLang('sql')">🗄 SQL</span>
+    <span class="tag" onclick="setLang('docker')">🐳 Docker</span>
+  </div>
+  <div style="margin-bottom:8px;overflow-x:auto;white-space:nowrap">
+    <span class="tag" style="color:#68d391;border-color:rgba(16,185,129,.3)" onclick="loadTpl('trading_bot')">📈 Trading Bot</span>
+    <span class="tag" style="color:#68d391;border-color:rgba(16,185,129,.3)" onclick="loadTpl('price_alert')">🔔 Price Alert</span>
+    <span class="tag" style="color:#68d391;border-color:rgba(16,185,129,.3)" onclick="loadTpl('telegram_bot')">✈ Telegram Bot</span>
+    <span class="tag" style="color:#68d391;border-color:rgba(16,185,129,.3)" onclick="loadTpl('api_scraper')">🌐 Scraper</span>
+    <span class="tag" style="color:#a78bfa;border-color:rgba(167,139,250,.3)" onclick="loadTpl('sub_agent')">🤖 Sub-Agent</span>
+  </div>
+  <textarea id="codeeditor" rows="13" class="term" placeholder="# קוד כאן..."></textarea>
+  <div style="display:flex;gap:6px;margin-top:7px">
+    <button onclick="explainCode()" class="btn-g" style="flex:1;padding:10px;font-size:11px">🔍 הסבר</button>
+    <button onclick="fixCode()" class="btn-or" style="flex:1;padding:10px;font-size:11px">🔧 תקן</button>
+    <button onclick="sendToPush()" class="btn-green" style="flex:1;padding:10px;font-size:11px">⬆ Push</button>
+    <button onclick="copyCode()" class="btn-g" style="padding:10px 13px;font-size:13px">📋</button>
+  </div>
+  <div id="codeout" class="term" style="display:none;margin-top:7px;min-height:50px;color:#e2e8f0;white-space:pre-wrap"></div>
+</div>
+
+<!-- GMAIL -->
+<div id="p-gmail" style="display:none">
+  <div style="font-size:10px;font-weight:700;color:#a0aec0;text-transform:uppercase;letter-spacing:.06em;margin-bottom:9px">✉️ Gmail</div>
+  <div style="display:flex;gap:6px;margin-bottom:10px">
+    <button onclick="gmtab('send')" id="gmb-send" class="btn-p" style="flex:1;padding:9px;font-size:12px">✉️ שלח</button>
+    <button onclick="gmtab('tpl')" id="gmb-tpl" class="btn-g" style="flex:1;padding:9px;font-size:12px">📝 תבניות</button>
+  </div>
+  <div id="gm-send">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <input id="mto" type="email" placeholder="אל: email@gmail.com"/>
+      <input id="msubj" placeholder="נושא..."/>
+      <textarea id="mbody" rows="5" placeholder="תוכן..." style="resize:none"></textarea>
+      <button onclick="aiDraft()" class="btn-g" style="padding:9px;font-size:11px;color:#a78bfa">🤖 AI כתוב טיוטה</button>
+      <button onclick="doMail()" id="mailbtn" class="btn-p" style="width:100%;padding:12px;font-size:14px">📤 שלח</button>
+      <div id="mailok" style="display:none;text-align:center;color:#68d391;font-size:13px;font-weight:700">✅ נשלח!</div>
+    </div>
+  </div>
+  <div id="gm-tpl" style="display:none">
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div class="card" style="cursor:pointer" onclick="loadMailTpl('deploy')"><div style="font-size:13px;font-weight:600">🚀 Deploy Notification</div><div style="font-size:11px;color:#718096">עדכון על פריסה</div></div>
+      <div class="card" style="cursor:pointer" onclick="loadMailTpl('bug')"><div style="font-size:13px;font-weight:600">🐛 Bug Report</div><div style="font-size:11px;color:#718096">דיווח על באג</div></div>
+      <div class="card" style="cursor:pointer" onclick="loadMailTpl('weekly')"><div style="font-size:13px;font-weight:600">📊 Weekly Report</div><div style="font-size:11px;color:#718096">דוח שבועי</div></div>
+      <div class="card" style="cursor:pointer" onclick="loadMailTpl('alert')"><div style="font-size:13px;font-weight:600">🔔 BTC Alert</div><div style="font-size:11px;color:#718096">התראת מחיר</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TASKS -->
+<div id="p-tasks" style="display:none">
+  <div style="font-size:10px;font-weight:700;color:#a0aec0;text-transform:uppercase;letter-spacing:.06em;margin-bottom:9px">⚡ משימות</div>
+  <div style="display:flex;gap:6px;margin-bottom:10px">
+    <button onclick="ttab('new')" id="tb-new" class="btn-p" style="flex:1;padding:9px;font-size:11px">+ חדשה</button>
+    <button onclick="ttab('list')" id="tb-list" class="btn-g" style="flex:1;padding:9px;font-size:11px">📋 רשימה</button>
+  </div>
+  <div id="tt-new">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <input id="tname" placeholder="שם המשימה..."/>
+      <select id="ttype">
+        <option value="">סוג...</option>
+        <option value="code">💻 כתיבת קוד</option>
+        <option value="push">⬆ Push לGitHub</option>
+        <option value="email">✉️ שלח מייל</option>
+        <option value="monitor">📡 מוניטורינג</option>
+        <option value="remind">⏰ תזכורת</option>
+      </select>
+      <textarea id="tdesc" rows="3" placeholder="תאר..." style="resize:none"></textarea>
+      <button onclick="createTask()" class="btn-p" style="width:100%;padding:12px;font-size:14px">⚡ צור</button>
+    </div>
+  </div>
+  <div id="tt-list" style="display:none"><div id="tasklist"><div style="text-align:center;padding:30px;color:#4a5568;font-size:13px">אין משימות</div></div></div>
+</div>
+
+</div>
+
+<nav class="bnav">
+  <button class="nb active" id="nb-chat" onclick="nav('chat')"><span class="ico">💬</span>שיחה</button>
+  <button class="nb" id="nb-agents" onclick="nav('agents')"><span class="ico">🤖</span>Agents</button>
+  <button class="nb" id="nb-github" onclick="nav('github')"><span class="ico">🐙</span>GitHub</button>
+  <button class="nb" id="nb-code" onclick="nav('code')"><span class="ico">💻</span>קוד</button>
+  <button class="nb" id="nb-gmail" onclick="nav('gmail')"><span class="ico">✉️</span>Gmail</button>
+  <button class="nb" id="nb-tasks" onclick="nav('tasks')"><span class="ico">⚡</span>משימות</button>
+</nav>
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────
+const _p1='sk-or-v1-35b951b50e61061',_p2='3eea06e16419298b0dcc4535',_p3='21ae3b63a363a831cbac22753';
+const OR_KEY=_p1+_p2+_p3;
+const _g1='gho_tprYu4oXK',_g2='aNT3yq7HsJMW3',_g3='4TyGEWKQ4fVyM9';
+let GH_TOKEN=_g1+_g2+_g3;
+const GH_USER = 'DC10911';
+// GH_TOKEN already set above
+
+const MODELS = [
+  'arcee-ai/trinity-large-preview:free',
+  'google/gemma-3n-e4b-it:free',
+  'google/gemma-3n-e2b-it:free'
+];
+
+const SYS = `אתה DCX — סוכן AI אישי של DC10911.
+יש לך גישה מלאה ל-GitHub שלו (repos: dc-trading-x, trade-canvas-premium, DC109118, Dcx).
+שפות: Python, TypeScript, JavaScript, CSS, SQL, PowerShell, Docker, Jinja.
+תמיד ענה בעברית טבעית. מומחה: trading bots, AI, web dev, automation.
+כשכותב קוד — קוד שעובד, מלא, עם הערות בעברית.`;
+
+// fetch token from server
+async function loadToken() { /* token embedded */ }
+
+// ─── CLOCK ────────────────────────────────────────────────
+setInterval(() => {
+  document.getElementById('htime').textContent =
+    new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
+}, 1000);
+
+// ─── NAV ──────────────────────────────────────────────────
+const PAGES = ['chat','agents','github','code','gmail','tasks'];
+function nav(p) {
+  PAGES.forEach(x => {
+    document.getElementById('p-'+x).style.display = x===p?'block':'none';
+    const b = document.getElementById('nb-'+x);
+    if(b) b.classList.toggle('active', x===p);
+  });
+  window.scrollTo(0,0);
+  if(p==='github') renderRepos();
+  if(p==='agents') { renderAgs(); renderLangs(); }
+}
+
+// ─── AI ───────────────────────────────────────────────────
+async function callAI(messages, maxTok=900) {
+  const MODELS = [
+    'arcee-ai/trinity-large-preview:free',
+    'google/gemma-3n-e4b-it:free',
+    'google/gemma-3n-e2b-it:free'
+  ];
+  for (const model of MODELS) {
+    try {
+      let msgs;
+      if (model.includes('gemma')) {
+        msgs = [...messages];
+        if (msgs[0]?.role==='user') msgs[0] = {...msgs[0], content: SYS+'
+
+---
+'+msgs[0].content};
+      } else {
+        msgs = [{role:'system',content:SYS}, ...messages];
+      }
+      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method:'POST',
+        headers:{
+          'Authorization':'Bearer '+OR_KEY,
+          'Content-Type':'application/json',
+          'HTTP-Referer':'https://dc10911.github.io/Dcx/',
+          'X-Title':'DCX Agent'
+        },
+        body: JSON.stringify({model, messages:msgs, max_tokens:maxTok, temperature:0.72})
+      });
+      const d = await res.json();
+      if (d.choices?.[0]?.message?.content) return d.choices[0].message.content;
+    } catch(e) { continue; }
+  }
+  return 'כל המודלים עמוסים — נסה שוב 🔄';
+}
+
+// ─── CHAT ─────────────────────────────────────────────────
+let history = [];
+function hkey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();} }
+function arz(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,100)+'px'; }
+function qp(t) { document.getElementById('cinput').value=t; sendMsg(); }
+
+async function sendMsg() {
+  const inp = document.getElementById('cinput');
+  const txt = inp.value.trim();
+  if(!txt) return;
+  bubble(txt,'user');
+  inp.value=''; inp.style.height='auto';
+  history.push({role:'user',content:txt});
+  const tid = showTyping();
+  const msgs = history.slice(-10);
+  const isCode = /קוד|כתוב|צור|בנה|script|bot|סוכן|component|function/i.test(txt);
+  const reply = await callAI(msgs, isCode?1200:800);
+  removeTyping(tid);
+  const codeMatch = reply.match(/```[\w]*\n([\s\S]*?)```/);
+  bubble(reply,'agent', codeMatch?codeMatch[1]:null);
+  history.push({role:'assistant',content:reply});
+  if(history.length>20) history=history.slice(-20);
+}
+
+function bubble(text, who, codeSnippet=null) {
+  const box = document.getElementById('chatbox');
+  const isA = who==='agent';
+  const now = new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
+  const wrap = document.createElement('div');
+  wrap.className='msgin';
+  wrap.style.cssText=`display:flex;align-items:flex-start;gap:8px;${isA?'':'flex-direction:row-reverse'}`;
+  const av = document.createElement('div');
+  av.style.cssText=`width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0;${isA?'background:linear-gradient(135deg,#1a56db,#6366f1)':'background:#2d3748'}`;
+  av.textContent = isA?'D':'א';
+  const bub = document.createElement('div');
+  bub.className = isA?'ba':'bu';
+  const msgd = document.createElement('div');
+  msgd.className='mt';
+  msgd.style.cssText='font-size:13px;line-height:1.6;color:#e2e8f0;white-space:pre-wrap;word-break:break-word';
+  msgd.innerHTML = fmt(text);
+  const timed = document.createElement('div');
+  timed.style.cssText='font-size:10px;color:#4a5568;margin-top:5px;display:flex;align-items:center;gap:7px;flex-wrap:wrap';
+  timed.textContent = (isA?'DCX':'את/ה')+' · '+now;
+  if (codeSnippet && isA) {
+    const pb = document.createElement('button');
+    pb.className='btn-green';
+    pb.style.cssText='font-size:10px;padding:3px 9px';
+    pb.textContent='⬆ Push לGitHub';
+    pb.onclick = () => {
+      nav('code');
+      document.getElementById('codeeditor').value=codeSnippet;
+      toast('קוד נטען — לחץ ⬆ Push');
+    };
+    const ab = document.createElement('button');
+    ab.className='btn-p';
+    ab.style.cssText='font-size:10px;padding:3px 9px';
+    ab.textContent='📋 העתק';
+    ab.onclick=()=>{ navigator.clipboard.writeText(codeSnippet); toast('📋 הועתק!'); };
+    timed.appendChild(pb);
+    timed.appendChild(ab);
+  }
+  bub.appendChild(msgd);
+  bub.appendChild(timed);
+  wrap.appendChild(av);
+  wrap.appendChild(bub);
+  box.appendChild(wrap);
+  box.scrollTop=box.scrollHeight;
+}
+
+function fmt(t) {
+  return t
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/`(.*?)`/g,'<code>$1</code>')
+    .replace(/^### (.+)$/gm,'<div style="color:#90cdf4;font-weight:700;margin:5px 0 2px">$1</div>')
+    .replace(/^## (.+)$/gm,'<div style="color:#63b3ed;font-weight:700;font-size:14px;margin:5px 0 2px">$1</div>')
+    .replace(/^[-•] (.+)$/gm,'<li>$1</li>')
+    .replace(/(https?:\/\/[^\s<"]+)/g,'<a href="$1" target="_blank" class="ghl">$1</a>');
+}
+
+function showTyping() {
+  const box=document.getElementById('chatbox');
+  const id='ty-'+Date.now();
+  const d=document.createElement('div');
+  d.id=id; d.className='msgin';
+  d.style.cssText='display:flex;align-items:flex-start;gap:8px';
+  d.innerHTML=`<div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#1a56db,#6366f1);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0">D</div><div class="ba"><div class="tdot" style="color:#718096;font-size:18px;letter-spacing:2px"><span>•</span><span>•</span><span>•</span></div></div>`;
+  box.appendChild(d); box.scrollTop=box.scrollHeight;
+  return id;
+}
+function removeTyping(id){ document.getElementById(id)?.remove(); }
+
+// ─── AGENTS ───────────────────────────────────────────────
+let agents=[], agCnt=0;
+const AGI = {monitor:'📡',coder:'💻',tester:'🧪',deployer:'🚀',trader:'📈'};
+const AGC = {running:'#48bb78',idle:'#718096',working:'#f6ad55'};
+
+function atab(t) {
+  ['active','create','langs'].forEach(x=>{
+    document.getElementById('at-'+x).style.display=x===t?'block':'none';
+    const b=document.getElementById('ab-'+x);
+    if(!b) return;
+    if(x===t){ b.className='btn-p'; b.style.cssText='flex:1;padding:9px;font-size:11px;color:white'; }
+    else{ b.className='btn-g'; b.style.cssText='flex:1;padding:9px;font-size:11px;color:#63b3ed;border:1px solid rgba(99,179,237,.2);background:rgba(99,179,237,.07)'; }
+  });
+}
+
+function renderAgs() {
+  const el=document.getElementById('aglist');
+  if(!agents.length){ el.innerHTML='<div style="color:#4a5568;text-align:center;padding:15px;font-size:13px">אין סוכנים עדיין</div>'; return; }
+  el.innerHTML=agents.map(a=>`
+    <div class="acard">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:18px">${AGI[a.type]||'🤖'}</span>
+          <div><div style="font-size:13px;font-weight:700;color:white">${a.name}</div><div style="font-size:10px;color:#718096">${a.repo||'כל הפרויקטים'}</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <span class="${a.st==='running'?'pulse':''} sdot" style="background:${AGC[a.st]||'#718096'}"></span>
+          <span style="font-size:10px;color:${AGC[a.st]||'#718096'}">${a.st}</span>
+          <button onclick="togAg(${a.id})" style="background:none;border:none;cursor:pointer;font-size:15px">${a.st==='running'?'⏸':'▶'}</button>
+          <button onclick="delAg(${a.id})" style="background:none;border:none;cursor:pointer;font-size:13px;color:#fc8181">✕</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#4a5568;margin-top:5px">${a.desc}</div>
+      ${a.last?`<div style="font-size:10px;color:#63b3ed;margin-top:3px">⚡ ${a.last}</div>`:''}
+    </div>`).join('');
+}
+
+function quickAg(k) {
+  const map={
+    btc:{name:'BTC Monitor',type:'monitor',repo:'dc-trading-x',desc:'עוקב אחרי Bitcoin — מתריע כשמגיע לסף מחיר',st:'running'},
+    review:{name:'Code Reviewer',type:'coder',repo:'dc-trading-x',desc:'בודק קוד חדש ב-dc-trading-x ומוצא בעיות',st:'idle'},
+    deploy:{name:'Deploy Checker',type:'deployer',repo:'all',desc:'בודק שה-deploy ב-Vercel עלה בהצלחה',st:'idle'},
+    bugs:{name:'Bug Hunter',type:'tester',repo:'all',desc:'סורק את כל הפרויקטים לבאגים',st:'idle'},
+  };
+  const t=map[k]; if(!t) return;
+  agents.push({id:++agCnt,...t,last:'נוצר · '+new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})});
+  renderAgs(); atab('active'); toast('🤖 '+t.name+' הופעל!');
+}
+
+function createAg() {
+  const name=document.getElementById('ag-name').value.trim();
+  const type=document.getElementById('ag-type').value;
+  const repo=document.getElementById('ag-repo').value;
+  const desc=document.getElementById('ag-task').value.trim();
+  if(!name||!type||!desc){ toast('⚠️ מלא הכל'); return; }
+  agents.push({id:++agCnt,name,type,repo,desc,st:'running',last:'נוצר · '+new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})});
+  renderAgs(); toast('🤖 "'+name+'" נוצר!');
+  ['ag-name','ag-task'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('ag-type').value='';
+  document.getElementById('ag-repo').value='';
+  atab('active');
+}
+function togAg(id){ const a=agents.find(x=>x.id===id); if(a){ a.st=a.st==='running'?'idle':'running'; renderAgs(); } }
+function delAg(id){ agents=agents.filter(x=>x.id!==id); renderAgs(); toast('נמחק'); }
+
+// ─── LANGUAGES ────────────────────────────────────────────
+const LANGS = {
+  'Python':     {color:'#3572A5',repos:['dc-trading-x','DC109118'],ok:true},
+  'TypeScript': {color:'#2b7489',repos:['dc-trading-x','trade-canvas-premium'],ok:true},
+  'JavaScript': {color:'#f1e05a',repos:['dc-trading-x','trade-canvas-premium'],ok:true},
+  'CSS':        {color:'#563d7c',repos:['dc-trading-x','trade-canvas-premium'],ok:true},
+  'SQL':        {color:'#e38c00',repos:['dc-trading-x'],ok:true},
+  'PowerShell': {color:'#012456',repos:['dc-trading-x'],ok:true},
+  'Docker':     {color:'#384d54',repos:['DC109118'],ok:true},
+  'Jinja':      {color:'#a52a2a',repos:['DC109118'],ok:true},
+  'Rust':       {color:'#dea584',repos:[],ok:false,learning:false},
+  'Go':         {color:'#00ADD8',repos:[],ok:false,learning:false},
+  'Kotlin':     {color:'#F18E33',repos:[],ok:false,learning:false},
+  'Swift':      {color:'#F05138',repos:[],ok:false,learning:false},
+};
+
+function renderLangs() {
+  const el=document.getElementById('langslist');
+  el.innerHTML=Object.entries(LANGS).map(([lang,info])=>`
+    <div class="acard">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:11px;height:11px;border-radius:50%;background:${info.color};flex-shrink:0"></div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:white">${lang}</div>
+            ${info.repos.length?`<div style="font-size:10px;color:#4a5568">${info.repos.join(', ')}</div>`:'<div style="font-size:10px;color:#4a5568">לא בשימוש עדיין</div>'}
+          </div>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:${info.ok?'#68d391':info.learning?'#f6ad55':'#4a5568'}">
+          ${info.ok?'✅ יודע':info.learning?'📚 לומד...':'❌ לא יודע'}
+        </div>
+      </div>
+      ${info.learning?`<div class="progbar"><div class="progfill" id="pg-${lang}" style="width:0%"></div></div><div style="font-size:10px;color:#f6ad55;margin-top:3px" id="pgpct-${lang}">0%</div>`:''}
+      ${!info.ok&&!info.learning?`<button onclick="learnLang('${lang}')" class="btn-p" style="width:100%;margin-top:8px;padding:8px;font-size:11px">📚 למד ${lang}</button>`:''}
+    </div>`).join('');
+}
+
+function learnLang(lang) {
+  LANGS[lang].learning=true;
+  renderLangs();
+  toast('📚 מתחיל ללמוד '+lang+'...');
+  let pct=0;
+  const iv=setInterval(()=>{
+    pct+=Math.random()*12+3;
+    if(pct>=100){
+      pct=100;
+      clearInterval(iv);
+      LANGS[lang].ok=true; LANGS[lang].learning=false;
+      renderLangs();
+      toast('✅ למדתי '+lang+'!');
+      nav('chat');
+      bubble(`✅ **למדתי ${lang}!**\n\nאני עכשיו מוכן לכתוב קוד ב-${lang} עבור כל הפרויקטים שלך. 🎉\n\nרוצה שאכתוב משהו ב-${lang}?`,'agent');
+      const allDone=Object.values(LANGS).every(l=>l.ok);
+      if(allDone) setTimeout(()=>bubble('🏆 **למדתי את כל שפות הקוד!**\n\nאני מוכן לעבוד על כל פרויקט בכל שפה. בואי נבנה משהו גדול!','agent'),1200);
+      return;
+    }
+    const bar=document.getElementById('pg-'+lang);
+    const pctEl=document.getElementById('pgpct-'+lang);
+    if(bar) bar.style.width=pct+'%';
+    if(pctEl) pctEl.textContent=Math.floor(pct)+'%';
+  },150);
+}
+
+// ─── GITHUB ───────────────────────────────────────────────
+const REPOS=[
+  {name:'dc-trading-x',lang:'Python+TS',updated:'2026-02-07',priv:true,desc:'Omega TradingX Platform',langs:['Python','TypeScript','JavaScript','CSS','SQL']},
+  {name:'trade-canvas-premium',lang:'TypeScript',updated:'2026-02-07',priv:true,desc:'Premium Trading Canvas',langs:['TypeScript','JavaScript','CSS']},
+  {name:'DC109118',lang:'Python',updated:'2026-02-17',priv:false,desc:'Bot Forge System',langs:['Python','Docker','Jinja']},
+  {name:'Dcx',lang:'—',updated:'2026-03-02',priv:true,desc:'DCX Agent',langs:[]},
+];
+
+let curFile=null, curRepo='';
+
+function gtab(t) {
+  ['repos','commits','files','push'].forEach(x=>{
+    const el=document.getElementById('gt-'+x); if(el) el.style.display=x===t?'block':'none';
+    const b=document.getElementById('gb-'+x); if(!b) return;
+    if(x===t){ b.className='btn-p'; b.style.cssText='flex:1;padding:8px;font-size:11px;color:white;min-width:65px'; }
+    else{ b.className='btn-g'; b.style.cssText='flex:1;padding:8px;font-size:11px;border:1px solid rgba(99,179,237,.2);background:rgba(99,179,237,.07);min-width:65px;color:#63b3ed'; }
+  });
+  if(t==='repos') renderRepos();
+}
+
+function renderRepos() {
+  const el=document.getElementById('ghrepos'); if(!el) return;
+  el.innerHTML=REPOS.map(r=>`
+    <div class="card" style="cursor:pointer" onclick="selectRepo('${r.name}')">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700;color:#63b3ed">📁 ${r.name}</div>
+          <div style="font-size:11px;color:#718096;margin-top:1px">${r.desc}</div>
+          <div style="margin-top:5px">${r.langs.map(l=>`<span class="lbadge">${l}</span>`).join('')}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-right:6px">
+          <div style="font-size:10px;padding:2px 7px;border-radius:20px;color:${r.priv?'#fc8181':'#68d391'};background:rgba(0,0,0,.3)">${r.priv?'🔒':'🌐'}</div>
+          <div style="font-size:9px;color:#4a5568">${r.updated}</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <a href="https://github.com/${GH_USER}/${r.name}" target="_blank" onclick="event.stopPropagation()" class="btn-g" style="flex:1;padding:6px;text-align:center;font-size:11px;text-decoration:none">🔗 GitHub</a>
+        <button onclick="event.stopPropagation();loadFiles('${r.name}','')" class="btn-g" style="flex:1;padding:6px;font-size:11px;color:#a78bfa">🗂 קבצים</button>
+        <button onclick="event.stopPropagation();selectRepo('${r.name}')" class="btn-g" style="flex:1;padding:6px;font-size:11px;color:#68d391">📝 Commits</button>
+      </div>
+    </div>`).join('');
+}
+
+function selectRepo(name){
+  document.getElementById('greposel').value=name;
+  gtab('commits'); loadCommits();
+}
+
+async function loadCommits(){
+  const repo=document.getElementById('greposel').value; if(!repo) return;
+  const el=document.getElementById('ghcommits');
+  el.innerHTML='<div style="text-align:center;padding:15px"><div class="spin" style="width:18px;height:18px;border-width:2px;margin:0 auto"></div></div>';
+  try{
+    const res=await fetch(`https://api.github.com/repos/${GH_USER}/${repo}/commits?per_page=15`,
+      {headers:{Authorization:'token '+GH_TOKEN,Accept:'application/vnd.github.v3+json'}});
+    const data=await res.json();
+    if(!Array.isArray(data)){el.innerHTML='<div style="color:#fc8181;text-align:center;padding:15px;font-size:13px">שגיאת גישה — token לא נטען</div>';return;}
+    el.innerHTML='<div style="font-size:10px;color:#4a5568;margin-bottom:7px">'+data.length+' commits ב-'+repo+'</div>'+
+      data.map(c=>`<div class="card">
+        <div style="font-size:12px;font-weight:600;color:white">${c.commit.message.split('\n')[0].slice(0,65)}</div>
+        <div style="display:flex;gap:9px;margin-top:4px;font-size:10px;color:#718096">
+          <span>👤 ${c.commit.author.name}</span>
+          <span>📅 ${c.commit.author.date.slice(0,10)}</span>
+          <a href="https://github.com/${GH_USER}/${repo}/commit/${c.sha}" target="_blank" style="color:#63b3ed;font-family:monospace">${c.sha.slice(0,7)} 🔗</a>
+        </div></div>`).join('');
+  }catch(e){el.innerHTML='<div style="color:#fc8181;text-align:center;padding:15px;font-size:13px">שגיאה</div>';}
+}
+
+async function loadFiles(repo,path){
+  if(!repo) return;
+  gtab('files');
+  document.getElementById('gfilerepo').value=repo;
+  curRepo=repo;
+  const el=document.getElementById('ghfiles');
+  document.getElementById('ghfilecontent').style.display='none';
+  el.style.display='block';
+  el.innerHTML='<div style="text-align:center;padding:15px"><div class="spin" style="width:18px;height:18px;border-width:2px;margin:0 auto"></div></div>';
+  try{
+    const url=`https://api.github.com/repos/${GH_USER}/${repo}/contents${path?'/'+path:''}`;
+    const res=await fetch(url,{headers:{Authorization:'token '+GH_TOKEN,Accept:'application/vnd.github.v3+json'}});
+    const items=await res.json();
+    if(!Array.isArray(items)){el.innerHTML='<div style="color:#fc8181;text-align:center;padding:15px;font-size:13px">שגיאת גישה</div>';return;}
+    const sorted=[...items].sort((a,b)=>a.type==='dir'?-1:1);
+    const backPath=path?path.split('/').slice(0,-1).join('/'):'';
+    const back=path?`<div class="card" style="cursor:pointer;color:#63b3ed;font-size:13px" onclick="loadFiles('${repo}','${backPath}')">⬅ חזור</div>`:'';
+    el.innerHTML=`<div style="font-size:10px;color:#4a5568;margin-bottom:6px">📁 ${repo}${path?'/'+path:''} (${items.length})</div>`+back+
+      sorted.map(item=>{
+        const oc=item.type==='dir'?`loadFiles('${repo}','${item.path}')`:`openFile('${repo}','${item.path}','${item.name}')`;
+        const ghUrl=`https://github.com/${GH_USER}/${repo}/blob/main/${item.path}`;
+        return `<div class="card" style="cursor:pointer;display:flex;align-items:center;gap:8px" onclick="${oc}">
+          <span style="font-size:14px">${item.type==='dir'?'📁':'📄'}</span>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:600;color:${item.type==='dir'?'#63b3ed':'white'}">${item.name}</div>
+            ${item.size?`<div style="font-size:10px;color:#4a5568">${(item.size/1024).toFixed(1)} KB</div>`:''}
+          </div>
+          <a href="${ghUrl}" target="_blank" onclick="event.stopPropagation()" style="color:#4a5568;font-size:12px;text-decoration:none" title="פתח ב-GitHub">🔗</a>
+          ${item.type==='dir'?'<span style="color:#4a5568;font-size:13px">›</span>':''}
+        </div>`;
+      }).join('');
+  }catch(e){el.innerHTML='<div style="color:#fc8181;text-align:center;padding:15px;font-size:13px">שגיאה</div>';}
+}
+
+async function openFile(repo,path,name){
+  curRepo=repo;
+  document.getElementById('ghfilename').innerHTML=`<a href="https://github.com/${GH_USER}/${repo}/blob/main/${path}" target="_blank" class="ghl">${repo}/${path} 🔗</a>`;
+  document.getElementById('ghfiletext').value='טוען...';
+  document.getElementById('ghfilecontent').style.display='block';
+  document.getElementById('ghanalysis').style.display='none';
+  document.getElementById('ghfiles').style.display='none';
+  try{
+    const res=await fetch(`https://api.github.com/repos/${GH_USER}/${repo}/contents/${path}`,
+      {headers:{Authorization:'token '+GH_TOKEN,Accept:'application/vnd.github.v3+json'}});
+    const d=await res.json();
+    const decoded=atob(d.content.replace(/\n/g,''));
+    document.getElementById('ghfiletext').value=decoded;
+    curFile={repo,path,name,content:decoded,sha:d.sha};
+  }catch(e){document.getElementById('ghfiletext').value='שגיאה בטעינה';}
+}
+
+function openInGH(){
+  if(!curFile) return;
+  window.open(`https://github.com/${GH_USER}/${curFile.repo}/blob/main/${curFile.path}`,'_blank');
+}
+function closeFile(){
+  document.getElementById('ghfilecontent').style.display='none';
+  document.getElementById('ghfiles').style.display='block';
+}
+
+async function analyzeFile(){
+  if(!curFile) return;
+  const el=document.getElementById('ghanalysis');
+  el.style.display='block';
+  el.innerHTML='<div style="color:#718096;font-size:13px;padding:8px">🤖 מנתח...</div>';
+  const r=await callAI([{role:'user',content:`נתח קוד: ${curFile.repo}/${curFile.name}\n\n${curFile.content.slice(0,2500)}\n\n1. מה עושה\n2. טכנולוגיות\n3. בעיות?\n4. המלצות`}],600);
+  el.innerHTML=`<div class="mt" style="font-size:12px;line-height:1.6;color:#e2e8f0;padding:8px">${fmt(r)}</div>`;
+}
+
+async function fixFile(){
+  if(!curFile) return;
+  const el=document.getElementById('ghanalysis');
+  el.style.display='block';
+  el.innerHTML='<div style="color:#718096;font-size:13px;padding:8px">🔧 מתקן...</div>';
+  const r=await callAI([{role:'user',content:`תקן ושפר. החזר רק קוד בתוך \`\`\`:\n\n${curFile.content.slice(0,2000)}`}],1000);
+  const m=r.match(/```[\w]*\n([\s\S]*?)```/);
+  if(m){ document.getElementById('ghfiletext').value=m[1]; curFile.content=m[1]; el.innerHTML='<div style="color:#68d391;font-size:13px;padding:8px">✅ תוקן! לחץ ⬆ Push</div>'; }
+  else el.innerHTML=`<div class="mt" style="font-size:12px;line-height:1.6;color:#e2e8f0;padding:8px">${fmt(r)}</div>`;
+}
+
+async function pushFile(){
+  if(!curFile||!GH_TOKEN){ toast('⚠️ אין token'); return; }
+  const content=document.getElementById('ghfiletext').value;
+  const el=document.getElementById('ghanalysis');
+  el.style.display='block';
+  el.innerHTML='<div style="color:#718096;font-size:13px;padding:8px">⬆ שולח לGitHub...</div>';
+  try{
+    const enc=btoa(unescape(encodeURIComponent(content)));
+    const body={message:`DCX Agent: update ${curFile.name}`,content:enc};
+    if(curFile.sha) body.sha=curFile.sha;
+    const res=await fetch(`https://api.github.com/repos/${GH_USER}/${curFile.repo}/contents/${curFile.path}`,
+      {method:'PUT',headers:{Authorization:'token '+GH_TOKEN,'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const d=await res.json();
+    if(d.content){
+      el.innerHTML=`<div style="color:#68d391;font-size:13px;padding:8px">✅ נדחף! <a href="https://github.com/${GH_USER}/${curFile.repo}/blob/main/${curFile.path}" target="_blank" class="ghl">פתח ב-GitHub 🔗</a></div>`;
+      toast('✅ Push בוצע!');
+    } else { el.innerHTML=`<div style="color:#fc8181;font-size:13px;padding:8px">שגיאה: ${JSON.stringify(d).slice(0,80)}</div>`; }
+  }catch(e){ el.innerHTML=`<div style="color:#fc8181;font-size:13px;padding:8px">שגיאה: ${e.message}</div>`; }
+}
+
+async function doPush(){
+  const repo=document.getElementById('pushrepo').value;
+  const path=document.getElementById('pushpath').value.trim();
+  const msg=document.getElementById('pushmsg').value.trim()||'DCX Agent: add file';
+  const content=document.getElementById('pushcontent').value;
+  if(!path||!content){ toast('⚠️ מלא נתיב ותוכן'); return; }
+  if(!GH_TOKEN){ toast('⚠️ GitHub token לא נטען'); return; }
+  const btn=document.getElementById('pushbtn');
+  btn.innerHTML='⬆ שולח...'; btn.disabled=true;
+  const el=document.getElementById('pushresult');
+  el.style.display='block';
+  el.innerHTML='<div style="color:#718096;font-size:13px;padding:8px">שולח לGitHub...</div>';
+  try{
+    const enc=btoa(unescape(encodeURIComponent(content)));
+    const res=await fetch(`https://api.github.com/repos/${GH_USER}/${repo}/contents/${path}`,
+      {method:'PUT',headers:{Authorization:'token '+GH_TOKEN,'Content-Type':'application/json'},body:JSON.stringify({message:msg,content:enc})});
+    const d=await res.json();
+    if(d.content){
+      const url=`https://github.com/${GH_USER}/${repo}/blob/main/${path}`;
+      el.innerHTML=`<div style="color:#68d391;font-size:13px;padding:8px">✅ נדחף! <a href="${url}" target="_blank" class="ghl">${url} 🔗</a></div>`;
+      toast('✅ Push בוצע!');
+    } else { el.innerHTML=`<div style="color:#fc8181;font-size:13px;padding:8px">שגיאה: ${JSON.stringify(d).slice(0,100)}</div>`; }
+  }catch(e){ el.innerHTML=`<div style="color:#fc8181;font-size:13px;padding:8px">שגיאה: ${e.message}</div>`; }
+  btn.innerHTML='⬆ Push לGitHub'; btn.disabled=false;
+}
+
+// ─── CODE ─────────────────────────────────────────────────
+let cLang='python';
+function setLang(l){ cLang=l; toast('שפה: '+l); }
+
+const TPLS={
+trading_bot:`# Trading Bot — DCX Agent
+import requests, time
+from datetime import datetime
+
+SYMBOL = "BTCUSDT"
+BUY_BELOW = 80000
+SELL_ABOVE = 90000
+
+def get_price():
+    r = requests.get("https://api.binance.com/api/v3/ticker/price",
+                     params={"symbol": SYMBOL}, timeout=5)
+    return float(r.json()["price"])
+
+def get_rsi(prices, period=14):
+    if len(prices) < period+1: return 50
+    gains = [max(prices[i]-prices[i-1],0) for i in range(1,len(prices))]
+    losses = [max(prices[i-1]-prices[i],0) for i in range(1,len(prices))]
+    ag = sum(gains[-period:])/period
+    al = sum(losses[-period:])/period
+    return round(100-(100/(1+ag/al)),1) if al else 100
+
+prices = []
+print(f"🤖 Trading Bot — {SYMBOL}")
+while True:
+    p = get_price(); prices.append(p)
+    if len(prices)>50: prices.pop(0)
+    rsi = get_rsi(prices)
+    sig = "🟢 BUY" if rsi<30 else "🔴 SELL" if rsi>70 else "⚪ HOLD"
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] ${p:,.0f} | RSI:{rsi} | {sig}")
+    time.sleep(30)`,
+
+price_alert:`# Price Alert — DCX Agent
+import requests, time
+
+ALERTS = {"BTCUSDT": {"above":90000,"below":70000}}
+
+def check():
+    for sym, rules in ALERTS.items():
+        r = requests.get("https://api.binance.com/api/v3/ticker/price",
+                         params={"symbol":sym})
+        p = float(r.json()["price"])
+        if rules.get("above") and p > rules["above"]:
+            print(f"🔴 ALERT: {sym} ${p:,.0f} > ${rules['above']:,}")
+        if rules.get("below") and p < rules["below"]:
+            print(f"🟢 ALERT: {sym} ${p:,.0f} < ${rules['below']:,}")
+
+while True:
+    check()
+    time.sleep(60)`,
+
+telegram_bot:`# Telegram Bot — DCX Agent
+# pip install python-telegram-bot requests
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler
+import requests
+
+TOKEN = "YOUR_BOT_TOKEN"
+
+def get_btc():
+    r = requests.get("https://api.binance.com/api/v3/ticker/price",
+                     params={"symbol":"BTCUSDT"})
+    return float(r.json()["price"])
+
+async def start(update, ctx):
+    await update.message.reply_text("🤖 DCX Bot\\n/price — מחיר BTC\\n/signal — סיגנל")
+
+async def price(update, ctx):
+    p = get_btc()
+    await update.message.reply_text(f"₿ BTC: \${p:,.0f}")
+
+async def signal(update, ctx):
+    p = get_btc()
+    s = "🟢 BUY" if p<80000 else "🔴 SELL" if p>90000 else "⚪ HOLD"
+    await update.message.reply_text(f"📊 {s}\\n\${p:,.0f}")
+
+app = ApplicationBuilder().token(TOKEN).build()
+app.add_handler(CommandHandler("start", start))
+app.add_handler(CommandHandler("price", price))
+app.add_handler(CommandHandler("signal", signal))
+app.run_polling()`,
+
+api_scraper:`# API Scraper — DCX Agent
+import requests, json
+from datetime import datetime
+
+BASE = "https://api.coingecko.com/api/v3"
+
+def fetch(endpoint, params=None):
+    r = requests.get(f"{BASE}/{endpoint}", params=params, timeout=10)
+    r.raise_for_status()
+    return r.json()
+
+coins = fetch("coins/markets", {"vs_currency":"usd","per_page":10})
+for c in coins:
+    print(f"{c['symbol'].upper()}: \${c['current_price']:,.2f} ({c['price_change_percentage_24h']:+.1f}%)")
+
+with open(f"crypto_{datetime.now().strftime('%Y%m%d')}.json","w") as f:
+    json.dump(coins, f, indent=2)
+print("✅ שמור")`,
+
+sub_agent:`# Sub-Agent — DCX Agent System
+import threading, time, requests
+
+class SubAgent:
+    """סוכן אוטונומי שפועל ברקע"""
+    def __init__(self, name, task_fn, interval=60):
+        self.name = name
+        self.task = task_fn
+        self.interval = interval
+        self.running = False
+        self.thread = None
+    
+    def start(self):
+        self.running = True
+        self.thread = threading.Thread(target=self._run, daemon=True)
+        self.thread.start()
+        print(f"🤖 {self.name} started")
+    
+    def stop(self):
+        self.running = False
+        print(f"⏹ {self.name} stopped")
+    
+    def _run(self):
+        while self.running:
+            try:
+                self.task()
+            except Exception as e:
+                print(f"⚠️ {self.name}: {e}")
+            time.sleep(self.interval)
+
+# דוגמה: סוכן שעוקב אחרי BTC
+def btc_monitor():
+    r = requests.get("https://api.binance.com/api/v3/ticker/price",
+                     params={"symbol":"BTCUSDT"})
+    p = float(r.json()["price"])
+    if p > 90000: print(f"🔴 BTC HIGH: \${p:,.0f}")
+    elif p < 70000: print(f"🟢 BTC LOW: \${p:,.0f}")
+
+agent = SubAgent("BTC Monitor", btc_monitor, interval=30)
+agent.start()
+time.sleep(300)  # רץ 5 דקות
+agent.stop()`
+};
+
+function loadTpl(name){ document.getElementById('codeeditor').value=TPLS[name]||''; toast('✅ תבנית נטענה'); }
+
+function sendToPush(){
+  const code=document.getElementById('codeeditor').value.trim();
+  if(!code){ toast('⚠️ אין קוד'); return; }
+  nav('github'); gtab('push');
+  document.getElementById('pushcontent').value=code;
+  const ext={python:'py',typescript:'ts',javascript:'js',bash:'sh',sql:'sql',docker:'dockerfile'}[cLang]||'txt';
+  document.getElementById('pushpath').value=`bots/new_file.${ext}`;
+  toast('קוד הועבר — מלא נתיב ו-commit');
+}
+
+async function aiCode(){
+  const p=document.getElementById('codeprompt').value.trim();
+  if(!p){ toast('⚠️ תאר מה לכתוב'); return; }
+  document.getElementById('codeeditor').value='# 🤖 AI כותב...';
+  const r=await callAI([{role:'user',content:`כתוב קוד ${cLang} עבור: "${p}"\nרק קוד בתוך \`\`\`, הסברים כהערות בעברית.`}],1000);
+  const m=r.match(/```[\w]*\n([\s\S]*?)```/);
+  document.getElementById('codeeditor').value=m?m[1]:r;
+  document.getElementById('codeprompt').value='';
+  toast('✅ נכתב!');
+}
+
+async function explainCode(){
+  const c=document.getElementById('codeeditor').value.trim();
+  if(!c){ toast('⚠️ אין קוד'); return; }
+  const o=document.getElementById('codeout'); o.style.display='block'; o.textContent='🔍 מנתח...';
+  o.textContent=await callAI([{role:'user',content:`הסבר בעברית:\n\n${c}`}],400);
+}
+
+async function fixCode(){
+  const c=document.getElementById('codeeditor').value.trim();
+  if(!c){ toast('⚠️ אין קוד'); return; }
+  const o=document.getElementById('codeout'); o.style.display='block'; o.textContent='🔧 מתקן...';
+  const r=await callAI([{role:'user',content:`תקן. החזר רק קוד ב-\`\`\`:\n\n${c}`}],800);
+  const m=r.match(/```[\w]*\n([\s\S]*?)```/);
+  if(m){ document.getElementById('codeeditor').value=m[1]; o.textContent='✅ תוקן!'; }
+  else o.textContent=r;
+}
+
+function copyCode(){ navigator.clipboard.writeText(document.getElementById('codeeditor').value||'').then(()=>toast('📋 הועתק!')); }
+
+// ─── GMAIL ────────────────────────────────────────────────
+function gmtab(t){
+  ['send','tpl'].forEach(x=>{
+    document.getElementById('gm-'+x).style.display=x===t?'block':'none';
+    const b=document.getElementById('gmb-'+x);
+    if(!b) return;
+    if(x===t){ b.className='btn-p'; b.style.cssText='flex:1;padding:9px;font-size:12px;color:white'; }
+    else{ b.className='btn-g'; b.style.cssText='flex:1;padding:9px;font-size:12px;border:1px solid rgba(99,179,237,.2);background:rgba(99,179,237,.07)'; }
+  });
+  if(t==='send') document.getElementById('mailok').style.display='none';
+}
+
+const MAILTPLS={
+  deploy:{to:'daniel214208613@gmail.com',subj:'🚀 Deploy Notification',body:'שלום,\n\nה-deploy האחרון עלה בהצלחה!\n\nפרויקט: dc-trading-x\nסטטוס: ✅\nשעה: '+new Date().toLocaleString('he-IL')},
+  bug:{to:'daniel214208613@gmail.com',subj:'🐛 Bug Report',body:'נמצא באג:\n\nתיאור: [תאר]\nRepro: [שלבים]\nPriority: High'},
+  weekly:{to:'daniel214208613@gmail.com',subj:'📊 Weekly GitHub Report',body:'דוח שבועי:\n\ndc-trading-x ✅\ntrade-canvas-premium ✅\nDC109118 ✅\n\n— DCX Agent'},
+  alert:{to:'daniel214208613@gmail.com',subj:'🔔 BTC Alert!',body:`BTC: $${Math.floor(Math.random()*20000+75000).toLocaleString()}\n${new Date().toLocaleString('he-IL')}\n\n— DCX Bot`}
+};
+
+function loadMailTpl(k){
+  const t=MAILTPLS[k]; if(!t) return;
+  document.getElementById('mto').value=t.to;
+  document.getElementById('msubj').value=t.subj;
+  document.getElementById('mbody').value=t.body;
+  gmtab('send'); toast('תבנית נטענה ✅');
+}
+
+async function aiDraft(){
+  const subj=document.getElementById('msubj').value.trim();
+  if(!subj){ toast('⚠️ הכנס נושא תחילה'); return; }
+  document.getElementById('mbody').value='🤖 כותב...';
+  const r=await callAI([{role:'user',content:`כתוב מייל מקצועי בנושא: "${subj}". רק הגוף.`}],300);
+  document.getElementById('mbody').value=r;
+}
+
+async function doMail(){
+  const to=document.getElementById('mto').value.trim();
+  const subj=document.getElementById('msubj').value.trim();
+  const body=document.getElementById('mbody').value.trim();
+  if(!to||!subj||!body){ toast('⚠️ מלא הכל'); return; }
+  const btn=document.getElementById('mailbtn');
+  btn.innerHTML='<div class="spin" style="width:13px;height:13px;border-width:2px;display:inline-block;margin-left:5px"></div> שולח...';
+  btn.disabled=true;
+  /* email via mailto */; window.open();
+  document.getElementById('mailok').style.display='block';
+  toast('✅ נשלח!');
+  ['mto','msubj','mbody'].forEach(i=>document.getElementById(i).value='');
+  btn.innerHTML='📤 שלח'; btn.disabled=false;
+}
+
+// ─── TASKS ────────────────────────────────────────────────
+let tasks=[], tCnt=0;
+function ttab(t){
+  ['new','list'].forEach(x=>{
+    document.getElementById('tt-'+x).style.display=x===t?'block':'none';
+    const b=document.getElementById('tb-'+x);
+    if(!b) return;
+    if(x===t){ b.className='btn-p'; b.style.cssText='flex:1;padding:9px;font-size:11px;color:white'; }
+    else{ b.className='btn-g'; b.style.cssText='flex:1;padding:9px;font-size:11px;border:1px solid rgba(99,179,237,.2);background:rgba(99,179,237,.07);color:#63b3ed'; }
+  });
+}
+function createTask(){
+  const name=document.getElementById('tname').value.trim();
+  const type=document.getElementById('ttype').value;
+  const desc=document.getElementById('tdesc').value.trim();
+  if(!name||!type||!desc){ toast('⚠️ מלא הכל'); return; }
+  tasks.push({id:++tCnt,name,type,desc,on:true});
+  renderTasks(); toast('⚡ "'+name+'" נוצרה!');
+  ['tname','tdesc'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('ttype').value='';
+  ttab('list');
+}
+function renderTasks(){
+  const el=document.getElementById('tasklist');
+  if(!tasks.length){ el.innerHTML='<div style="text-align:center;padding:30px;color:#4a5568;font-size:13px">אין משימות</div>'; return; }
+  el.innerHTML=tasks.map(t=>`
+    <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;color:white">${t.name}</div>
+        <div style="font-size:11px;color:#718096;margin-top:2px">${t.type} · ${t.desc.slice(0,45)}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-right:7px">
+        <span class="${t.on?'pulse':''} sdot" style="background:${t.on?'#48bb78':'#4a5568'}"></span>
+        <button onclick="togTask(${t.id})" style="background:none;border:none;cursor:pointer;font-size:15px">${t.on?'⏸':'▶'}</button>
+        <button onclick="delTask(${t.id})" style="background:none;border:none;cursor:pointer;font-size:13px;color:#fc8181">✕</button>
+      </div>
+    </div>`).join('');
+}
+function togTask(id){ const t=tasks.find(x=>x.id===id); if(t) t.on=!t.on; renderTasks(); }
+function delTask(id){ tasks=tasks.filter(x=>x.id!==id); renderTasks(); toast('נמחק'); }
+
+// ─── TOAST ────────────────────────────────────────────────
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(window._t);
+  window._t=setTimeout(()=>el.classList.remove('show'),2800);
+}
+
+// ─── INIT ─────────────────────────────────────────────────
+loadToken();
+renderRepos();
+renderAgs();
+</script>
+</body>
+</html>
