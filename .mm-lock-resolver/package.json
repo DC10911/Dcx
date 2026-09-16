@@ -1,0 +1,25 @@
+{
+  "name": "money-motion-lock-resolver",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@supabase/supabase-js": "2.116.0",
+    "lucide-react": "0.469.0",
+    "react": "19.0.8",
+    "react-dom": "19.0.8"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.63.3"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "4.3.0",
+    "autoprefixer": "10.5.4",
+    "postcss": "8.5.28",
+    "tailwindcss": "3.4.19",
+    "typescript": "5.7.3",
+    "vite": "6.4.3"
+  }
+}
