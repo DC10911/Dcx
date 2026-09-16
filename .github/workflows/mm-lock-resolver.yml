@@ -1,0 +1,39 @@
+name: MM Lock Resolver
+
+on:
+  push:
+    branches:
+      - mm-lock-resolver-20260916
+    paths:
+      - '.github/workflows/mm-lock-resolver.yml'
+      - '.mm-lock-resolver/package.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Resolve exact dependency graph
+        working-directory: .mm-lock-resolver
+        run: npm install --package-lock-only --ignore-scripts --audit=false --fund=false
+      - name: Verify lockfile
+        working-directory: .mm-lock-resolver
+        run: |
+          test -s package-lock.json
+          node -e "const l=require('./package-lock.json'); if(l.lockfileVersion!==3) process.exit(2); console.log('packages=' + Object.keys(l.packages||{}).length)"
+          sha256sum package-lock.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: money-motion-package-lock
+          path: .mm-lock-resolver/package-lock.json
+          if-no-files-found: error
+          retention-days: 1
